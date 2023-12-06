@@ -31,40 +31,45 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
     fetchPokemonData();
   }
 
-  Color _getColorFromString(String colorString) {
-    switch (colorString) {
-      case 'black':
-        return Colors.black;
-      case 'blue':
-        return Colors.blue;
-      case 'brown':
-        return Colors.brown;
-      case 'gray':
-        return Colors.grey;
-      case 'green':
-        return Colors.green;
-      case 'pink':
-        return Colors.pink;
-      case 'purple':
-        return Colors.purple;
-      case 'red':
-        return Colors.red;
-      case 'white':
-        return Colors.grey;
-      case 'yellow':
-        return Colors.yellow;
-      case 'gold':
-        return Colors.amber;
-      case 'silver':
-        return Colors.grey;
-      case 'orange':
-        return Colors.orange;
-      case 'violet':
-        return Colors.purpleAccent;
-      case 'cyan':
-        return Colors.cyan;
-      case 'teal':
-        return Colors.teal;
+  // bug : #A7B723, Dark: #75574C, Dragon: #7037FF, Electric: #F9CF30, Fairy: #E69EAC, Fighting: #C12239, Fire: #F57D31, Flying: #A891EC, Ghost: #70559B, Normal: #AAA67F, Grass: #74CB48, Ground: #DEC16B, Ice: #9AD6DF, Poison: #A43E9E, Psychic: #FB5584, Rock: #B69E31, Steel: #B7B9D0, Water: #6493EB
+  Color getColorFromType(String colorString) {
+    switch (colorString.toLowerCase()) {
+      case 'bug':
+        return const Color(0xFFA7B723);
+      case 'dark':
+        return const Color(0xFF75574C);
+      case 'dragon':
+        return const Color(0xFF7037FF);
+      case 'electric':
+        return const Color(0xFFF9CF30);
+      case 'fairy':
+        return const Color(0xFFE69EAC);
+      case 'fighting':
+        return const Color(0xFFC12239);
+      case 'fire':
+        return const Color(0xFFF57D31);
+      case 'flying':
+        return const Color(0xFFA891EC);
+      case 'ghost':
+        return const Color(0xFF70559B);
+      case 'normal':
+        return const Color(0xFFAAA67F);
+      case 'grass':
+        return const Color(0xFF74CB48);
+      case 'ground':
+        return const Color(0xFFDEC16B);
+      case 'ice':
+        return const Color(0xFF9AD6DF);
+      case 'poison':
+        return const Color(0xFFA43E9E);
+      case 'psychic':
+        return const Color(0xFFFB5584);
+      case 'rock':
+        return const Color(0xFFB69E31);
+      case 'steel':
+        return const Color(0xFFB7B9D0);
+      case 'water':
+        return const Color(0xFF6493EB);
       default:
         return Colors.black;
     }
@@ -76,7 +81,7 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
       pokemonDescription =
           await pokemonService.fetchPokemonDescription(widget.indexUrl);
       setState(() {
-        colorSeleccionado = _getColorFromString(pokemonDescription.color);
+        colorSeleccionado = getColorFromType(pokemon.types[0].name);
         isLoading = false;
       });
     } catch (e) {
@@ -128,15 +133,14 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
           color: colorSeleccionado,
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
                   height: 200,
                   color: colorSeleccionado,
                   child: Image.network(
                     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png',
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
                   ),
                 ),
                 Card(
@@ -145,17 +149,13 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
                   ),
                   color: Colors.white,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 16),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: pokemon.types
                                   .map(
@@ -188,6 +188,7 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
                                 color: colorSeleccionado,
                               ),
                             ),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
@@ -217,18 +218,17 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                        child: Row(
-                          textDirection: TextDirection.ltr,
-                          children: [
-                            Expanded(
-                                child: Text(
-                                  pokemonDescription.flavorText,
-                                  style: const TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
-                            ),
-                          ],
+                        padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: Container(
+                          height: 120,
+                          width: double.infinity,
+                          alignment: Alignment
+                              .center, // Alinea el texto al centro si es necesario
+                          child: Text(
+                            pokemonDescription.flavorText,
+                            style: const TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                       Padding(

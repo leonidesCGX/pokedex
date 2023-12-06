@@ -3,25 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pokedex/widgets/cardList.dart';
 import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pokédex',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Pokédex'),
-    );
-  }
-}
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -33,8 +14,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final ScrollController _scrollController = ScrollController();
-  late TextEditingController _searchController =
-  TextEditingController(); // Inicialización aquí
+  late TextEditingController _searchController = TextEditingController();
   List<dynamic> _pokemonList = [];
   List<dynamic> _displayedPokemon = [];
   bool _sortAscending = true;
@@ -44,8 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _searchController =
-        TextEditingController(); // Inicialización adicional aquí
+    _searchController = TextEditingController();
     _scrollController.addListener(_scrollListener);
     fetchPokemonList();
   }
@@ -58,16 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _scrollListener() {
-    if (!_loading &&
-        _scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 200) {
+    if (!_loading && _scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMorePokemon();
     }
   }
 
   void fetchPokemonList() async {
-    final response = await http
-        .get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1000'));
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1000'));
     if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
       if (decoded['results'] != null) {
@@ -87,19 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
         _loading = true;
       });
       await Future.delayed(const Duration(seconds: 2));
-
       int currentLength = _displayedPokemon.length;
       int newLength = currentLength + 9;
       if (newLength <= _pokemonList.length) {
         setState(() {
-          _displayedPokemon
-              .addAll(_pokemonList.getRange(currentLength, newLength));
+          _displayedPokemon.addAll(_pokemonList.getRange(currentLength, newLength));
           _loading = false;
         });
       } else {
         setState(() {
-          _displayedPokemon.addAll(
-              _pokemonList.getRange(currentLength, _pokemonList.length));
+          _displayedPokemon.addAll(_pokemonList.getRange(currentLength, _pokemonList.length));
           _loading = false;
         });
       }
@@ -111,14 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _sortBy = sortBy;
       if (_sortBy == 'Number') {
         _displayedPokemon.sort((a, b) => _sortAscending
-            ? a['url']
-                .toString()
-                .split('/')
-                .reversed
-                .toList()[1]
-                .compareTo(b['url'].toString().split('/').reversed.toList()[1])
-            : b['url'].toString().split('/').reversed.toList()[1].compareTo(
-                a['url'].toString().split('/').reversed.toList()[1]));
+            ? a['url'].toString().split('/').reversed.toList()[1].compareTo(b['url'].toString().split('/').reversed.toList()[1])
+            : b['url'].toString().split('/').reversed.toList()[1].compareTo(a['url'].toString().split('/').reversed.toList()[1]));
       } else if (_sortBy == 'Name') {
         _displayedPokemon.sort((a, b) => _sortAscending
             ? a['name'].compareTo(b['name'])
@@ -127,12 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
         final searchText = _searchController.text.toLowerCase();
         _displayedPokemon = _pokemonList.where((pokemon) {
           final name = pokemon['name'].toString().toLowerCase();
-          final number = pokemon['url']
-              .toString()
-              .split('/')
-              .reversed
-              .toList()[1]
-              .toLowerCase();
+          final number = pokemon['url'].toString().split('/').reversed.toList()[1].toLowerCase();
 
           return name.contains(searchText) || number.contains(searchText);
         }).toList();
@@ -140,12 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent.shade400,
         title: const Text('Pokédex'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60.0),
@@ -167,17 +127,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       prefixIcon: Icon(
                         Icons.search,
                         color: Colors.redAccent.shade400,
-                      ), // Icono de búsqueda
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       filled: true,
-                      fillColor: Colors.white, // Color de fondo blanco
+                      fillColor: Colors.white,
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14.0), // Altura de 50px
+                          vertical: 14.0),
                     ),
                     style: const TextStyle(
-                        color: Colors.black), // Color del texto negro
+                        color: Colors.black),
                   ),
                 ),
                 IconButton(
@@ -200,8 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: ListTile(
                             leading: Icon(
                               _sortBy == 'Name' ? Icons.check : Icons.circle,
-                              color: Colors
-                                  .black, // Cambiar color del icono a negro
+                              color: Colors.black,
                             ),
                             title: const Text('Order by Name'),
                           ),
@@ -210,35 +169,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     ).then((value) {
                       if (value != null) {
                         setState(() {
-                          _sortAscending =
-                              _sortBy == value ? !_sortAscending : true;
+                          _sortAscending = _sortBy == value ? !_sortAscending : true;
                           _sortPokemon(value);
                         });
                       }
                     });
                   },
                   icon: Container(
-                    width: 40, // Ancho del contenedor
-                    height: 40, // Alto del contenedor
+                    width: 40,
+                    height: 40,
                     decoration: const BoxDecoration(
-                      shape: BoxShape.circle, // Hacer el botón redondo
-                      color: Colors.white, // Fondo blanco del botón
+                      shape: BoxShape.circle,
+                      color: Colors.white,
                     ),
                     child: Align(
-                      alignment: Alignment.center, // Alinear el icono al centro
+                      alignment: Alignment.center,
                       child: _sortBy == ''
                           ? Icon(
                               Icons.sort,
-                              color: Colors.redAccent
-                                  .shade400, // Cambiar color del ícono a negro
+                              color: Colors.redAccent.shade400,
                             )
                           : Icon(
                               _sortBy == 'Name'
                                   ? Icons.sort_by_alpha
                                   : Icons.numbers,
-                              // Icons.sort,
-                              color: Colors.redAccent
-                                  .shade400, // Cambiar color del ícono a negro
+                              color: Colors.redAccent.shade400,
                             ),
                     ),
                   ),

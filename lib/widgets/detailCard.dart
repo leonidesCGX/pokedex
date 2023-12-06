@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-
 Widget buildDetailCard({
   required String label,
   required String value,
 }) {
-  return Container(
-    width: 200,
+  return SizedBox(
+    width: 150,
     child: Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Centra verticalmente
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center, // Centra horizontalmente
             children: [
-              Icon(label == 'Height'
-                  ? Icons.height
-                  : Icons.shopping_bag_outlined),
-              Text(value, textAlign: TextAlign.end),
+              Icon(label == 'Height' ? Icons.height : Icons.shopping_bag_outlined),
+              Flexible(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
               Text(
-                textAlign: TextAlign.end,
                 label == 'Height' ? 'm' : 'kg',
                 style: const TextStyle(
                   fontSize: 12,
@@ -27,8 +32,8 @@ Widget buildDetailCard({
               ),
             ],
           ),
+          const SizedBox(height: 8),
           Text(
-            textAlign: TextAlign.end,
             label,
             style: const TextStyle(
               fontSize: 12,
@@ -42,15 +47,16 @@ Widget buildDetailCard({
 }
 
 Widget buildAbilityCard(List abilities) {
-  return Container(
+  return SizedBox(
+    width: 150,
     child: Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: abilities.map((ability) {
               return Text(
                 textAlign: TextAlign.end,

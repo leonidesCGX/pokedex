@@ -13,21 +13,23 @@ class PokemonService {
       final jsonData = json.decode(response.body);
       // Extrae los datos del JSON y crea una instancia de Pokemon
       return Pokemon(
-        id: jsonData['id'],
-        name: jsonData['name'],
-        weight: jsonData['weight'],
-        height: jsonData['height'],
-        abilities: Abilities.decodeJson(jsonData['abilities']),
-        stats: Stat.decodeJson(jsonData['stats']),
-        types: PokeTypes.decodeJson(jsonData['types'],)
-      );
+          id: jsonData['id'],
+          name: jsonData['name'],
+          weight: jsonData['weight'],
+          height: jsonData['height'],
+          abilities: Abilities.decodeJson(jsonData['abilities']),
+          stats: Stat.decodeJson(jsonData['stats']),
+          types: PokeTypes.decodeJson(
+            jsonData['types'],
+          ));
     } else {
       throw Exception('Failed to load Pokémon data');
     }
   }
 
   Future<PokemonDescription> fetchPokemonDescription(int indexUrl) async {
-    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-species/$indexUrl'));
+    final response = await http
+        .get(Uri.parse('https://pokeapi.co/api/v2/pokemon-species/$indexUrl'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       return PokemonDescription(
@@ -37,5 +39,17 @@ class PokemonService {
     } else {
       throw Exception('Failed to load Pokémon description');
     }
+  }
+
+  Future<List<dynamic>> fetchPokemonList() async {
+    final response = await http
+        .get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1000'));
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      if (decoded['results'] != null) {
+        return decoded['results'];
+      }
+    }
+    throw Exception('Failed to load Pokémon');
   }
 }
